@@ -9,6 +9,7 @@ use App\Events\OrderPlaced;
 use App\Jobs\MatchOrders;
 use App\Models\Order;
 use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -82,6 +83,11 @@ class OrderService
 
             // Dispatch matching job after transaction commit
             MatchOrders::dispatch($order)->afterCommit();
+
+            // Alternative: Call orders:match command directly via Artisan facade after transaction commits
+            // This provides immediate synchronous matching instead of queued async processing
+            // Uncomment the line below and comment out the MatchOrders::dispatch line above to use this approach
+            // DB::afterCommit(fn () => Artisan::call('orders:match'));
 
             return $order;
         });
