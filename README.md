@@ -103,6 +103,26 @@ php artisan queue:work
 
 Or use the dev script which includes it automatically.
 
+### Order Matching Command
+
+The `orders:match` command should be called after each buy/sell transaction to process pending orders. There are several ways to trigger it:
+
+1. **Via Artisan Facade** - Call it directly where transactions happen (e.g., in `OrderService` after a transaction commits):
+   ```php
+   use Illuminate\Support\Facades\Artisan;
+   
+   Artisan::call('orders:match');
+   ```
+
+2. **Manual execution** - Run it manually via command line:
+   ```bash
+   php artisan orders:match
+   ```
+
+3. **Automated via scheduler** - Add it to `app/Console/Kernel.php` schedule method or set up a cron job for periodic batch processing.
+
+Currently, it's set up for manual execution, but it can be integrated into the transaction flow using the Artisan facade for immediate matching after each order placement.
+
 ## API Endpoints
 
 All API endpoints require authentication via session-based auth.
